@@ -16,6 +16,23 @@ build/grammar.o: src/grammar.cpp src/grammar.hpp
 build/:
 	mkdir -p build
 
+build/gtest: build/
+	mkdir -p build/gtest
+
+build/gtest/gtest_main.o: build/ build/gtest third_party/googletest/googletest/src/gtest_main.cc
+	g++ -std=c++2b -O3 -isystem third_party/googletest/googletest/include -Isrc -Ithird_party/googletest -c third_party/googletest/googletest/src/gtest_main.cc -o build/gtest/gtest_main.o
+
+build/tests/unit/test_earley.o: build/ build/gtest tests/unit/test_earley.cpp src/earley.hpp
+	mkdir -p build/tests/unit
+	g++ -std=c++2b -O3 -isystem third_party/googletest/googletest/include -Isrc -Ithird_party/googletest -c tests/unit/test_earley.cpp -o build/tests/unit/test_earley.o
+
+build/run_unit_tests: build/ build/gtest build/gtest/gtest_main.o build/tests/unit/test_earley.o build/earley.o build/grammar.o
+	g++ -std=c++2b -O3 build/gtest/gtest_main.o build/tests/unit/test_example.o build/grammar.o build/earley.o \
+		-o build/run_unit_tests -pthread
+
+test: build/run_unit_tests
+	./build/run_unit_tests
+
 copy-tests:
 	cp tests/grammar.txt build/grammar.txt
 	cp tests/tests.txt build/tests.txt

@@ -56,3 +56,5 @@ struct Grammar {
 };
 
 Grammar read_grammar(const std::string& filename);
+
+std::vector<std::vector<term_t>> read_tests(const std::string& inputs);
