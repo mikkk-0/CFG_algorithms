@@ -27,18 +27,18 @@ struct Rule {
 
 struct Grammar {
     std::map<nterm_t, std::vector<Rule>> rules;
-    nterm_t start;
+    nterm_t start = "S";
 
     std::set<term_t> terms;
     std::set<nterm_t> nterms;
-
-    Grammar(nterm_t st = "S");
 
     void add_rule(const Rule& rule);
 
     bool is_term(symbol_t symbol);
 
     bool is_nterm(symbol_t symbol);
+
+    void set_start(nterm_t st);
 
     static symbol_t to_symbol(symbol_t symbol);
 
