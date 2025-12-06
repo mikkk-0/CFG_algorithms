@@ -40,19 +40,19 @@ struct Grammar {
 
     bool is_nterm(symbol_t symbol);
 
-    symbol_t to_symbol(symbol_t symbol);
+    static symbol_t to_symbol(symbol_t symbol);
 
-    std::string to_string(symbol_t symbol);
+    static std::string to_string(symbol_t symbol);
 
-    term_t to_term(symbol_t symbol);
+    static term_t to_term(symbol_t symbol);
 
-    std::string to_string(std::vector<symbol_t> symbols);
+    static std::string to_string(std::vector<symbol_t> symbols);
 
-    std::vector<symbol_t> concat(const std::vector<symbol_t>& a, const std::vector<symbol_t>& b);
+    static std::vector<symbol_t> concat(const std::vector<symbol_t>& a, const std::vector<symbol_t>& b);
 
-    std::vector<symbol_t> to_symbols(std::string s);
+    static std::vector<symbol_t> to_symbols(std::string s);
 
-    std::vector<symbol_t> to_symbols(std::vector<term_t> s);
+    static std::vector<symbol_t> to_symbols(std::vector<term_t> s);
 };
 
 Grammar read_grammar(const std::string& filename);

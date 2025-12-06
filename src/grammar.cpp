@@ -23,7 +23,7 @@ term_t Grammar::to_term(symbol_t symbol) {
 std::string Grammar::to_string(std::vector<symbol_t> symbols) {
     std::string z;
     for (auto el : symbols) {
-        z += to_string(el);
+        z += Grammar::to_string(el);
     }
     return z;
 }
@@ -39,7 +39,7 @@ std::vector<symbol_t> Grammar::concat(const std::vector<symbol_t>& a, const std:
 std::vector<symbol_t> Grammar::to_symbols(std::string s) {
     std::vector<symbol_t> symbols;
     for (auto c : s) {
-        symbols.push_back(to_symbol(std::string(1, c)));
+        symbols.push_back(Grammar::to_symbol(std::string(1, c)));
     }
     return symbols;
 }
@@ -47,7 +47,7 @@ std::vector<symbol_t> Grammar::to_symbols(std::string s) {
 std::vector<symbol_t> Grammar::to_symbols(std::vector<term_t> s) {
     std::vector<symbol_t> res;
     for (auto& x : s) {
-        res.push_back(to_symbol(x));
+        res.push_back(Grammar::to_symbol(x));
     }
     return res;
 }
@@ -62,7 +62,7 @@ Grammar::Grammar(nterm_t st = "S"): start(st) {
 }
 
 void Grammar::add_rule(const Rule& rule) {
-    if (is_term(rule.left)) {
+    if (Grammar::is_term(rule.left)) {
         throw RuleException{};
     }
     rules[rule.left].push_back(rule);
