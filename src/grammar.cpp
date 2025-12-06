@@ -52,19 +52,20 @@ std::vector<symbol_t> Grammar::to_symbols(std::vector<term_t> s) {
     return res;
 }
 
-Grammar::Grammar(nterm_t st = "S"): start(st) {
+void Grammar::add_rule(const Rule& rule) {
+    if (Grammar::is_term(rule.left)) {
+        throw RuleException{};
+    }
+    rules[rule.left].push_back(rule);
+}
+
+void Grammar::set_start(nterm_t st) {
+    this->start = st;
     std::vector<symbol_t> starter_rule;
     starter_rule.emplace_back(st + "'");
     starter_rule.emplace_back("->");
     starter_rule.emplace_back(st);
     Rule rule(starter_rule);
-    rules[rule.left].push_back(rule);
-}
-
-void Grammar::add_rule(const Rule& rule) {
-    if (Grammar::is_term(rule.left)) {
-        throw RuleException{};
-    }
     rules[rule.left].push_back(rule);
 }
 
@@ -106,6 +107,9 @@ Grammar read_grammar(const std::string& filename) {
         rule_symbols.emplace_back(cur);
         g.add_rule(rule_symbols);
     }
+    nterm_t start;
+    in >> start;
+    g.set_start(start);
     in.close();
     return g;
 }
