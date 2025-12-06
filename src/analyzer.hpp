@@ -1,3 +1,5 @@
+#pragma once
+
 #include "grammar.hpp"
 
 struct Analyzer {
