@@ -27,12 +27,13 @@ struct Rule {
 
 struct Grammar {
     std::map<nterm_t, std::vector<Rule>> rules;
+    std::vector<Rule> rule_i;
     nterm_t start = "S";
 
     std::set<term_t> terms;
     std::set<nterm_t> nterms;
 
-    void add_rule(const Rule& rule);
+    void add_rule(Rule rule);
 
     bool is_term(symbol_t symbol);
 

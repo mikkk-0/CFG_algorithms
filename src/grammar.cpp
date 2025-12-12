@@ -1,4 +1,5 @@
 #include "grammar.hpp"
+#include <iostream>
 
 bool Grammar::is_term(symbol_t symbol) {
     return terms.contains(symbol);
@@ -52,11 +53,13 @@ std::vector<symbol_t> Grammar::to_symbols(std::vector<term_t> s) {
     return res;
 }
 
-void Grammar::add_rule(const Rule& rule) {
+void Grammar::add_rule(Rule rule) {
     if (Grammar::is_term(rule.left)) {
         throw RuleException{};
     }
+    rule.rule_i = rule_i.size();
     rules[rule.left].push_back(rule);
+    rule_i.push_back(rule);
 }
 
 void Grammar::set_start(nterm_t st) {
@@ -66,7 +69,9 @@ void Grammar::set_start(nterm_t st) {
     starter_rule.emplace_back("->");
     starter_rule.emplace_back(st);
     Rule rule(starter_rule);
+    rule.rule_i = rule_i.size();
     rules[rule.left].push_back(rule);
+    rule_i.push_back(rule);
 }
 
 Grammar read_grammar(const std::string& filename) {
@@ -108,6 +113,7 @@ Grammar read_grammar(const std::string& filename) {
         g.add_rule(rule_symbols);
     }
     nterm_t start;
+    in >> start;
     g.set_start(start);
     in.close();
     return g;
