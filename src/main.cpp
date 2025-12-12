@@ -14,6 +14,9 @@ int main(int argc, char** argv) {
     Grammar g = read_grammar(gram);
     analyzer->init(g);
     auto tests = read_tests(inputs);
+    for (auto& w: tests) {
+        std::cout << analyzer->proceed(w) << '\n';
+    }
     delete analyzer;
     return 0;
 }
