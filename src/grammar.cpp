@@ -119,6 +119,38 @@ Grammar read_grammar(const std::string& filename) {
     return g;
 }
 
+std::vector<std::vector<term_t>> read_tests(const std::string& path) {
+    std::ifstream fin(path);
+    size_t n_words;
+    fin >> n_words;
+    std::vector<std::vector<term_t>> words;
+    while (n_words--) {
+        std::vector<term_t> word;
+        std::string s;
+        getline(fin, s);
+        while (!s.empty() && isspace(s.back())) {
+            s.pop_back();
+        }
+        if (s.empty()) {
+            n_words++;
+            continue;
+        }
+        std::string cur;
+        for (auto& c : s) {
+            if (!isspace(c)) {
+                cur += c;
+            } else {
+                word.emplace_back(cur);
+                cur = "";
+            }
+        }
+        word.emplace_back(cur);
+        words.push_back(word);
+    }
+    fin.close();
+    return words;
+}
+
 Rule::Rule(std::vector<symbol_t> rule) {
     static size_t rules_created = 0;
     rule_i = rules_created++;

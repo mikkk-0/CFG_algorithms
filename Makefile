@@ -1,5 +1,5 @@
-run-lrk: build/ build/lrk copy-tests	
-	build/lrk lrk build/grammar.txt build/tests.txt
+lrk: build/ build/lrk copy-tests	
+	cd build && ./lrk lrk grammar.txt tests.txt
 
 build/lrk: build/ build/main.o build/lrk.o build/grammar.o
 	g++ -std=c++2b -O3 build/main.o build/lrk.o build/grammar.o -o build/lrk
@@ -17,8 +17,22 @@ build/:
 	mkdir -p build
 
 copy-tests:
-	cp tests/grammar.txt build/grammar.txt
-	cp tests/tests.txt build/tests.txt
+	cp tests/*.txt build/
+
+build/gtest-all.o: third_party/googletest/googletest/src/gtest-all.cc
+	g++ -std=c++2b -O0 -g -Ithird_party/googletest/googletest/include -Ithird_party/googletest/googletest -c third_party/googletest/googletest/src/gtest-all.cc -o build/gtest-all.o
+
+build/gtest_main-all.o: third_party/googletest/googletest/src/gtest_main.cc
+	g++ -std=c++2b -O0 -g -Ithird_party/googletest/googletest/include -Ithird_party/googletest/googletest -c third_party/googletest/googletest/src/gtest_main.cc -o build/gtest_main-all.o
+
+build/test_lrk.test.o: tests/unit/test_lrk.cpp src/grammar.hpp src/lrk.hpp src/analyzer.hpp build/
+	g++ -std=c++2b -O0 -g -Isrc -Ithird_party/googletest/googletest/include -c tests/unit/test_lrk.cpp -o build/test_lrk.test.o
+
+build/test_lrk: build/ build/gtest-all.o build/gtest_main-all.o build/test_lrk.test.o build/lrk.o build/grammar.o
+	g++ -std=c++2b -O0 -g -Isrc build/test_lrk.test.o build/lrk.o build/grammar.o build/gtest-all.o build/gtest_main-all.o -lpthread -o build/test_lrk
+
+test: build/test_lrk copy-tests
+	cd build && ./test_lrk
 
 clean:
 	rm -rf build
