@@ -387,6 +387,9 @@ bool LangRecogn::proceed(const std::vector<term_t>& word) {
             return pos == word.size();
         }
         if (go.op == pass::Shift) {
+            if (pos == word.size()) {
+                return false;
+            }
             stack.push_back(word[pos++]);
         }
         if (go.op == pass::Reduce) {
